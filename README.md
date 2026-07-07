@@ -7,8 +7,6 @@
 
 A **production-ready** Credit Risk Modeling project that predicts the Probability of Default (PD) for loan applicants using the [Home Credit Default Risk](https://www.kaggle.com/competitions/home-credit-default-risk) dataset.
 
-A **production-ready** Credit Risk Modeling project that predicts the Probability of Default (PD) for loan applicants using the [Home Credit Default Risk](https://www.kaggle.com/competitions/home-credit-default-risk) dataset.
-
 ![Credit Risk App Dashboard](reports/app_screenshot.PNG)
 
 ---
@@ -51,6 +49,7 @@ Poor lending decisions lead to:
 > This project focuses on the PD component. LGD and EAD modeling are planned as future work.
 
 **Target variable:**
+
 - `TARGET = 1` → Customer defaulted (repayment difficulties)
 - `TARGET = 0` → Customer did not default
 
@@ -171,14 +170,15 @@ credit-risk-pa-model/
 
 **Source:** [Kaggle — Home Credit Default Risk](https://www.kaggle.com/competitions/home-credit-default-risk/data)
 
-| File | Description |
-|------|-------------|
-| `application_train.csv` | 307,511 loan applications with labels |
-| `application_test.csv` | 48,744 applications without labels (optional) |
+| File                    | Description                                   |
+| ----------------------- | --------------------------------------------- |
+| `application_train.csv` | 307,511 loan applications with labels         |
+| `application_test.csv`  | 48,744 applications without labels (optional) |
 
 **This project uses only `application_train.csv`** for a clean supervised learning setup.
 
 Key statistics:
+
 - 307,511 customers
 - 122 raw features → ~140+ after feature engineering
 - 8.1% default rate (class imbalance handled)
@@ -188,6 +188,7 @@ Key statistics:
 ## 5. Setup Instructions
 
 ### Prerequisites
+
 - Python 3.10 or higher
 - pip
 
@@ -238,6 +239,7 @@ python src/train.py
 ```
 
 **Output:**
+
 - `artifacts/xgb_credit_risk_model_v2.pkl`
 - `artifacts/optimal_threshold_v2.pkl`
 - `artifacts/test_predictions_v2.csv`
@@ -297,15 +299,15 @@ Open your browser at `http://localhost:8501`.
 
 Run notebooks **in order**:
 
-| # | Notebook | Purpose |
-|---|----------|---------|
-| 01 | Business Understanding | Problem framing, dataset overview, class imbalance |
-| 02 | Data Quality & EDA | Missing value analysis, distributions, correlations |
-| 03 | Feature Engineering | All feature creation (mirrors feature_engineering.py) |
-| 04 | Logistic Regression | Baseline model |
-| 05 | XGBoost Model | Champion model with CV, early stopping, evaluation |
-| 06 | SHAP Explainability | Global + local model explanations |
-| 07 | Business Recommendations | Executive summary, risk bands, portfolio strategy |
+| #   | Notebook                 | Purpose                                               |
+| --- | ------------------------ | ----------------------------------------------------- |
+| 01  | Business Understanding   | Problem framing, dataset overview, class imbalance    |
+| 02  | Data Quality & EDA       | Missing value analysis, distributions, correlations   |
+| 03  | Feature Engineering      | All feature creation (mirrors feature_engineering.py) |
+| 04  | Logistic Regression      | Baseline model                                        |
+| 05  | XGBoost Model            | Champion model with CV, early stopping, evaluation    |
+| 06  | SHAP Explainability      | Global + local model explanations                     |
+| 07  | Business Recommendations | Executive summary, risk bands, portfolio strategy     |
 
 > **SHAP Fix (Notebook 06):** Use `shap.TreeExplainer(xgb_model)` — pass the
 > sklearn wrapper directly, NOT `xgb_model.get_booster()`. This resolves the
@@ -316,7 +318,9 @@ Run notebooks **in order**:
 ## 8. Model & Features
 
 ### Model
+
 **XGBoost Classifier** with:
+
 - `scale_pos_weight` for class imbalance
 - Early stopping (50 rounds patience)
 - 5-fold stratified cross-validation
@@ -324,88 +328,98 @@ Run notebooks **in order**:
 
 ### Engineered Features
 
-| Feature | Formula | Signal |
-|---------|---------|--------|
-| `CREDIT_INCOME_RATIO` | AMT_CREDIT / AMT_INCOME_TOTAL | Loan burden |
-| `ANNUITY_INCOME_RATIO` | AMT_ANNUITY / AMT_INCOME_TOTAL | Monthly payment capacity |
-| `GOODS_CREDIT_RATIO` | AMT_GOODS_PRICE / AMT_CREDIT | Loan-to-value |
-| `ANNUITY_CREDIT_RATIO` | AMT_ANNUITY / AMT_CREDIT | Implicit interest rate |
-| `CREDIT_PER_PERSON` | AMT_CREDIT / CNT_FAM_MEMBERS | Family credit exposure |
-| `INCOME_PER_PERSON` | AMT_INCOME_TOTAL / CNT_FAM_MEMBERS | Family income capacity |
-| `EXT_SOURCE_MEAN` | Mean of EXT_SOURCE_1/2/3 | External credit score aggregate |
-| `EXT_SOURCE_MIN` | Min of EXT_SOURCE_1/2/3 | Worst bureau score |
-| `EXT_SOURCE_STD` | Std of EXT_SOURCE_1/2/3 | Score volatility |
-| `EXT_SOURCE_PRODUCT` | Product of all 3 scores | Combined signal |
-| `EMPLOYMENT_AGE_RATIO` | \|DAYS_EMPLOYED\| / \|DAYS_BIRTH\| | Employment stability |
-| `AGE_YEARS` | \|DAYS_BIRTH\| / 365.25 | Applicant age |
-| `EMPLOYMENT_YEARS` | \|DAYS_EMPLOYED\| / 365.25 | Employment tenure |
-| `DOCUMENT_COUNT` | Sum of FLAG_DOCUMENT_* | Documentation thoroughness |
-| `BUREAU_INQUIRY_TOTAL` | Sum of AMT_REQ_CREDIT_BUREAU_* | Credit-seeking behaviour |
+| Feature                | Formula                            | Signal                          |
+| ---------------------- | ---------------------------------- | ------------------------------- |
+| `CREDIT_INCOME_RATIO`  | AMT_CREDIT / AMT_INCOME_TOTAL      | Loan burden                     |
+| `ANNUITY_INCOME_RATIO` | AMT_ANNUITY / AMT_INCOME_TOTAL     | Monthly payment capacity        |
+| `GOODS_CREDIT_RATIO`   | AMT_GOODS_PRICE / AMT_CREDIT       | Loan-to-value                   |
+| `ANNUITY_CREDIT_RATIO` | AMT_ANNUITY / AMT_CREDIT           | Implicit interest rate          |
+| `CREDIT_PER_PERSON`    | AMT_CREDIT / CNT_FAM_MEMBERS       | Family credit exposure          |
+| `INCOME_PER_PERSON`    | AMT_INCOME_TOTAL / CNT_FAM_MEMBERS | Family income capacity          |
+| `EXT_SOURCE_MEAN`      | Mean of EXT_SOURCE_1/2/3           | External credit score aggregate |
+| `EXT_SOURCE_MIN`       | Min of EXT_SOURCE_1/2/3            | Worst bureau score              |
+| `EXT_SOURCE_STD`       | Std of EXT_SOURCE_1/2/3            | Score volatility                |
+| `EXT_SOURCE_PRODUCT`   | Product of all 3 scores            | Combined signal                 |
+| `EMPLOYMENT_AGE_RATIO` | \|DAYS_EMPLOYED\| / \|DAYS_BIRTH\| | Employment stability            |
+| `AGE_YEARS`            | \|DAYS_BIRTH\| / 365.25            | Applicant age                   |
+| `EMPLOYMENT_YEARS`     | \|DAYS_EMPLOYED\| / 365.25         | Employment tenure               |
+| `DOCUMENT_COUNT`       | Sum of FLAG*DOCUMENT*\*            | Documentation thoroughness      |
+| `BUREAU_INQUIRY_TOTAL` | Sum of AMT*REQ_CREDIT_BUREAU*\*    | Credit-seeking behaviour        |
 
 ---
 
 ## 9. Evaluation Metrics
 
-| Metric | Description | Typical Target |
-|--------|-------------|----------------|
-| **ROC-AUC** | Discrimination ability | > 0.75 good, > 0.80 excellent |
-| **Gini** | 2×AUC − 1; credit industry standard | > 0.50 good |
-| **KS Statistic** | Max separation of score distributions | > 0.30 good |
-| **PR-AUC** | Precision-Recall balance (imbalanced classes) | Context-dependent |
-| **F1** | Precision-Recall harmonic mean at optimal threshold | Higher is better |
+| Metric           | Description                                         | Typical Target                |
+| ---------------- | --------------------------------------------------- | ----------------------------- |
+| **ROC-AUC**      | Discrimination ability                              | > 0.75 good, > 0.80 excellent |
+| **Gini**         | 2×AUC − 1; credit industry standard                 | > 0.50 good                   |
+| **KS Statistic** | Max separation of score distributions               | > 0.30 good                   |
+| **PR-AUC**       | Precision-Recall balance (imbalanced classes)       | Context-dependent             |
+| **F1**           | Precision-Recall harmonic mean at optimal threshold | Higher is better              |
 
 ---
 
 ## 10. Risk Bands & Business Decisions
 
-| PD Score | Risk Band | Recommendation | Action |
-|----------|-----------|----------------|--------|
-| < 10% | 🟢 Low Risk | Approve | Fast-track; competitive rate |
-| 10–30% | 🟡 Medium Risk | Manual Review | Standard underwriting |
-| 30–50% | 🟠 High Risk | High Risk Review | Income verification; reduced limit |
-| ≥ 50% | 🔴 Very High Risk | Reject | Decline; escalate to risk team |
+| PD Score | Risk Band         | Recommendation   | Action                             |
+| -------- | ----------------- | ---------------- | ---------------------------------- |
+| < 10%    | 🟢 Low Risk       | Approve          | Fast-track; competitive rate       |
+| 10–30%   | 🟡 Medium Risk    | Manual Review    | Standard underwriting              |
+| 30–50%   | 🟠 High Risk      | High Risk Review | Income verification; reduced limit |
+| ≥ 50%    | 🔴 Very High Risk | Reject           | Decline; escalate to risk team     |
 
 ---
 
 ## 11. Troubleshooting Guide
 
 ### ❌ `FileNotFoundError: Artifact not found`
+
 **Cause:** Model artifacts don't exist yet.  
 **Fix:** Run the pipeline and training in order:
+
 ```bash
 python src/pipeline.py
 python src/train.py
 ```
 
 ### ❌ `FileNotFoundError: Raw data not found`
+
 **Cause:** `data/raw/application_train.csv` is missing.  
 **Fix:** Download from Kaggle and place the file at the correct path.
 
 ### ❌ `ValueError: DataFrame.dtypes for data must be int, float, bool or category`
+
 **Cause:** You are using an old version of the preprocessing code that does not encode categoricals.  
 **Fix:** Ensure you are running `src/pipeline.py` from this version of the codebase (not old notebooks).
 
 ### ❌ SHAP `ValueError: could not convert string to float: '[5E-1]'`
+
 **Cause:** Using `shap.TreeExplainer(xgb_model.get_booster())` with SHAP ≥ 0.44 and XGBoost ≥ 1.7.  
 **Fix:** Use `shap.TreeExplainer(xgb_model)` — pass the sklearn wrapper directly.
 
 ### ❌ Streamlit `ModuleNotFoundError`
+
 **Cause:** `src` is not on the Python path.  
 **Fix:** Always run Streamlit from the project root:
+
 ```bash
 # From credit-risk-pa-model/ directory:
 streamlit run app.py
 ```
 
 ### ❌ Training is very slow
+
 **Cause:** Large dataset (307,511 rows) + 5-fold CV.  
 **Fix:** XGBoost's `tree_method="hist"` is already set for speed.  
 For faster prototyping, you can subsample:
+
 ```python
 df_sample = df.sample(50_000, random_state=42)
 ```
 
 ### ❌ Columns mismatch warning in Streamlit
+
 **Cause:** Your uploaded CSV is missing some columns present in the training data.  
 **Fix:** The app fills missing columns with 0 and warns you. For best results, use a CSV with the same structure as `application_train.csv`.
 
