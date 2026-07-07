@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Credit Risk Modeling — Requirements
+# Pinned to tested versions for reproducibility.
+# Install with: pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Core scientific stack
+pandas>=2.0.0,<3.0.0
+numpy>=1.24.0,<2.3.0
+
+# Machine Learning
+scikit-learn>=1.3.0,<2.0.0
+xgboost>=1.7.0,<3.0.0
+
+# Explainability
+# Note: SHAP 0.49+ works with XGBoost via sklearn API (pass XGBClassifier directly)
+shap>=0.44.0
+
+# Visualisation
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Web Application
+streamlit>=1.30.0
+
+# Artifact serialisation
+joblib>=1.3.0
+
+# Statistical tests
+scipy>=1.10.0
+
+# Notebook environment
+jupyter>=1.0.0
+notebook>=7.0.0
+ipywidgets>=8.0.0      # required for SHAP progress bars in notebooks
+
+# Development / testing (optional)
+# pytest>=7.4.0
+# black>=23.0.0
+# flake8>=6.0.0
